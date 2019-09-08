@@ -1,102 +1,67 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
+    {{ msg }}
+    <form>
+      <button @click="addTodo">Add Task</button>
+      <button @click="removeTodo">Delete Task</button>
+      <p>
+        input:
+        <input type="text" v-model="newTodo" />
+      </p>
+      <p>task:{{ newTodo }}</p>
+    </form>
+    <div>
+      <p v-for="todo in todos">
+        <input type="checkbox" v-model="todo.done" />
+        <input type="checkbox" v-model="todo.editing" />
+        <input v-if="todo.editing" v-model="todo.text" @keyup.enter="todo.editing = !todo.editing" />
+        <span v-else>{{ todo.text }}</span>
+        <button>EDIT</button>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  data () {
+  name: "HelloWorld",
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: "Welcome to Your Vue.js App",
+      todos: [
+        { text: "vue-router", done: false, editing: false},
+        { text: "vuex", done: false, editing: false},
+        { text: "vuetify", done: false, editing: false},
+        { text: "vue-loader", done: false, editing: false}
+      ],
+      newTodo: ""
+    };
+  },
+  methods: {
+    addTodo: function(event) {
+      let text = this.newTodo && this.newTodo.trim();
+      if (!text) {
+        return;
+      }
+      this.todos.push({
+        text: text,
+        done: false
+      });
+      this.newTodo = "";
+    },
+    removeTodo: function(event) {
+      for (let i = this.todos.length - 1; i >= 0; i--) {
+        if (this.todos[i].done) this.todos.splice(i, 1)
+      }
     }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 ul {
